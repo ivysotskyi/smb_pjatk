@@ -2,6 +2,7 @@ package com.example.shoppingtiger
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
@@ -17,10 +18,20 @@ class ShoppingListViewModel(private val app: Application) : AndroidViewModel(app
     init{
         val itemDao = ShoppingDatabase.instance(app).itemDao()
         itemRepo = ItemsRepository(itemDao)
-        insertItem(Item(name = "Banana"))
-        insertItem(Item(name = "Pineaple"))
+        //insertItem(Item(name = "Beer", quantity = 2, price = 5.5, purchased = false))
+        //insertItem(Item(name = "Chocolate", quantity = 3, price = 3.0, purchased = true))
+        viewModelScope.launch {
+            itemRepo.allItems.collect { itemList ->
+                for (item in itemList) {
+                    // Perform operations on 'item'
+                    Log.i("", "Item ID: ${item.id}, Name: ${item.name}")
+                }
+                //insertItem(Item(name = "Pineaple"))
+            }
+        }
         items = itemRepo.allItems
-    }
+        }
+
     fun insertItem(item: Item){
         viewModelScope.launch {
             itemRepo.insert(item)
@@ -34,6 +45,11 @@ class ShoppingListViewModel(private val app: Application) : AndroidViewModel(app
     fun deleteItem(item: Item){
         viewModelScope.launch {
             itemRepo.delete(item)
+        }
+    }
+    fun deleteItem(id: Int){
+        viewModelScope.launch {
+            itemRepo.delete(id)
         }
     }
 

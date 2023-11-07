@@ -22,4 +22,7 @@ interface ItemDAO {
 
     @Delete
     suspend fun deleteItem(item:Item)
+
+    @Query("DELETE FROM ITEMS WHERE item_id = :id")
+    suspend fun deleteItem(id:Int)
 }
