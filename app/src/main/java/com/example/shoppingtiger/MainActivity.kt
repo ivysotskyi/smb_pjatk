@@ -62,11 +62,7 @@ class MainActivity : ComponentActivity() {
                                 .requiredHeight(120.dp)
                                 .fillMaxWidth(),
                             onClick = {
-                                val secondActivityIntent =
-                                    Intent(context, ProductListActivity::class.java)
-                                //secondActivityIntent.putExtra("user", userName)
-                                context.startActivity(secondActivityIntent)
-                                //listUsers.value += inputText
+                                context.startActivity(Intent(context, OptionsActivity::class.java))
                             }
                         )
                         {

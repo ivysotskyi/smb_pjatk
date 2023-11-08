@@ -13,6 +13,11 @@
         android:theme="@style/Theme.ShoppingTiger"
         tools:targetApi="31">
         <activity
+            android:name=".OptionsActivity"
+            android:exported="false"
+            android:label="@string/title_activity_options"
+            android:theme="@style/Theme.ShoppingTiger" />
+        <activity
             android:name=".ProductListActivity"
             android:exported="false"
             android:label="@string/title_activity_product_list"

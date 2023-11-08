@@ -83,10 +83,12 @@ fun ShoppingListItems(
                 }
                 .padding(1.dp, 0.dp, 1.dp, 5.dp)
         ) {
-            Text("⇦", fontSize = 48.sp,
+            Text(
+                "⇦ Products List", fontSize = 28.sp,
                 modifier = Modifier.fillMaxWidth(),
                 color = Color.Blue,
-                style = TextStyle(fontWeight = FontWeight.Bold))
+                style = TextStyle(fontWeight = FontWeight.Bold)
+            )
         }
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
