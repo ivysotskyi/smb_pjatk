@@ -25,6 +25,7 @@ import com.example.shoppingtiger.ui.theme.ShoppingTigerTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        OptionsManager.initialize(applicationContext)
         setContent {
             ShoppingTigerTheme {
                 // A surface container using the 'background' color from the theme

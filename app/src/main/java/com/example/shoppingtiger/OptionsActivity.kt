@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.sp
 class OptionsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        OptionsManager.initialize(applicationContext)
         setContent {
             val currencyState = remember { mutableStateOf(OptionsManager.getCurrency()) }
             val showCheckboxState = remember { mutableStateOf(OptionsManager.getShowCheckbox()) }
