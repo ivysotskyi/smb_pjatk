@@ -1,5 +1,6 @@
 package com.example.shoppingtiger
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -43,6 +44,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -57,125 +59,61 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ShoppingTigerTheme {
-                val viewModel = ShoppingListViewModel(application)
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize().padding(15.dp),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    ShoppingListItems(
-                        viewModel = viewModel
-                    )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(10.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        val context = LocalContext.current
+                        Button(
+                            modifier = Modifier
+                                .requiredHeight(120.dp)
+                                .fillMaxWidth(),
+                            onClick = {
+                                val secondActivityIntent =
+                                    Intent(context, ProductListActivity::class.java)
+                                //secondActivityIntent.putExtra("user", userName)
+                                context.startActivity(secondActivityIntent)
+                                //listUsers.value += inputText
+                            }
+                        )
+                        {
+                            Text(
+                                text = "Go Shopping !",
+                                fontSize = 32.sp
+                            )
+                        }
+                        Spacer(
+                            modifier = Modifier.requiredHeight(20.dp)
+                        )
+                        Button(
+                            modifier = Modifier
+                                .requiredHeight(120.dp)
+                                .fillMaxWidth(),
+                            onClick = {
+                                val secondActivityIntent =
+                                    Intent(context, ProductListActivity::class.java)
+                                //secondActivityIntent.putExtra("user", userName)
+                                context.startActivity(secondActivityIntent)
+                                //listUsers.value += inputText
+                            }
+                        )
+                        {
+                            Text(
+                                text = "Options",
+                                fontSize = 32.sp
+                            )
+                        }
+                    }
                 }
             }
         }
     }
 }
-
-@Composable
-fun ShoppingListItems(
-    viewModel: ShoppingListViewModel,
-    modifier: Modifier = Modifier
-) {
-
-    val listItems by viewModel.items.collectAsState(emptyList())
-
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Top
-    ) {
-        items(listItems) { item ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(4.dp)
-                    .background(Color.White)
-            ) {
-                // Checkbox on the right
-                Checkbox(
-                    checked = item.purchased,
-                    onCheckedChange = { checked ->
-                        val itemCopy = item.copy(purchased = checked)
-                        viewModel.updatetItem(itemCopy)
-                    }
-                )
-
-                //name
-                BasicTextField(
-                    modifier = Modifier
-                        .padding(4.dp, 8.dp)
-                        .fillMaxWidth().weight(1f),
-                    value = item.name,
-                    onValueChange = { newName ->
-                        val itemCopy = item.copy(name = newName)
-                        viewModel.updatetItem(itemCopy)
-                    },
-                    singleLine = true,
-                    textStyle = TextStyle(fontSize = 20.sp)
-                )
-
-                //quantity
-                BasicTextField(
-                    modifier = Modifier
-                        .padding(4.dp, 8.dp)
-                        .requiredWidth(20.dp),
-                    value = item.quantity.toString(),
-                    onValueChange = { updatedQuantity ->
-                        val quantity = updatedQuantity.toIntOrNull() ?: 0
-                        val itemCopy = item.copy(quantity = quantity)
-                        viewModel.updatetItem(itemCopy)
-                    },
-                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-                    singleLine = true,
-                    textStyle = TextStyle(fontSize = 18.sp)
-                )
-
-                // Price
-                Text(
-                    modifier = Modifier.padding(10.dp, 8.dp, 1.dp, 8.dp),
-                    text = "ZŁ",
-                    fontSize = 18.sp
-                )
-                BasicTextField(
-                    modifier = Modifier
-                        .padding(4.dp, 8.dp)
-                        .requiredWidth(36.dp),
-                    value = item.price.toString(),
-                    onValueChange = { newPriceStr ->
-                        val newPrice = newPriceStr.toDoubleOrNull() ?: 0.0
-                        val itemCopy = item.copy(price = newPrice)
-                        viewModel.updatetItem(itemCopy)
-                    },
-                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-                    singleLine = true,
-                    textStyle = TextStyle(fontSize = 18.sp)
-                )
-
-                //remove button
-                IconButton(
-                    onClick = {
-                        viewModel.deleteItem(item.id)
-                    }
-                ) {
-                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Remove")
-                }
-            }
-            Divider()
-        }
-        item() {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(color = Color.White)
-                    .clickable {
-                        viewModel.insertItem(Item(name = "< new item >", quantity = 1))
-                    }
-                    .padding(8.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text("+ Add New", fontSize = 20.sp, color = Color.Blue)
-            }
-        }
-    }
-}
-

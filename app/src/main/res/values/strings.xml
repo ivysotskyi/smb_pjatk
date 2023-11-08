@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ShoppingTiger</string>
+    <string name="title_activity_product_list">ProductListActivity</string>
 </resources>
