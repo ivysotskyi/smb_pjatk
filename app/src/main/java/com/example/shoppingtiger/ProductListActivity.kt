@@ -1,5 +1,6 @@
 package com.example.shoppingtiger
 
+import OptionsManager
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -102,13 +103,14 @@ fun ShoppingListItems(
                         .background(Color.White)
                 ) {
                     // Checkbox on the right
-                    Checkbox(
-                        checked = item.purchased,
-                        onCheckedChange = { checked ->
-                            val itemCopy = item.copy(purchased = checked)
-                            viewModel.updatetItem(itemCopy)
-                        }
-                    )
+                    if (OptionsManager.getShowCheckbox())
+                        Checkbox(
+                            checked = item.purchased,
+                            onCheckedChange = { checked ->
+                                val itemCopy = item.copy(purchased = checked)
+                                viewModel.updatetItem(itemCopy)
+                            }
+                        )
 
                     //name
                     BasicTextField(
@@ -144,7 +146,7 @@ fun ShoppingListItems(
                     // Price
                     Text(
                         modifier = Modifier.padding(10.dp, 8.dp, 1.dp, 8.dp),
-                        text = "ZŁ",
+                        text = OptionsManager.getCurrency(),
                         fontSize = 18.sp
                     )
                     BasicTextField(
@@ -173,7 +175,7 @@ fun ShoppingListItems(
                 }
                 Divider()
             }
-            item() {
+            item {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()

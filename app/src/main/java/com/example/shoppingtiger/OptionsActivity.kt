@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,6 +34,9 @@ class OptionsActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         OptionsManager.initialize(applicationContext)
         setContent {
+            val currencyState = remember { mutableStateOf(OptionsManager.getCurrency()) }
+            val showCheckboxState = remember { mutableStateOf(OptionsManager.getShowCheckbox()) }
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -67,9 +72,10 @@ class OptionsActivity : ComponentActivity() {
                         fontSize = 24.sp
                     )
                     BasicTextField(
-                        value = OptionsManager.getCurrency(),
+                        value = currencyState.value,
                         onValueChange = {
                             OptionsManager.setCurrency(it)
+                            currencyState.value = it
                         },
                         maxLines = 1,
                         modifier = Modifier
@@ -94,9 +100,10 @@ class OptionsActivity : ComponentActivity() {
                             .weight(1f)
                     )
                     Switch(
-                        checked = OptionsManager.getShowCheckbox(),
+                        checked = showCheckboxState.value,
                         onCheckedChange = {
                             OptionsManager.setShowCheckbox(it)
+                            showCheckboxState.value = it
                         }
                     )
                 }
