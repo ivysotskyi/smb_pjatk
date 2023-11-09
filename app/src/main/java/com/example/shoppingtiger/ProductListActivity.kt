@@ -30,6 +30,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -96,6 +98,10 @@ fun ShoppingListItems(
             verticalArrangement = Arrangement.Top
         ) {
             items(listItems) { item ->
+
+                val editedQuantity = remember { mutableStateOf(item.quantity.toString()) }
+                val editedPrice = remember { mutableStateOf(item.price.toString()) }
+                val editedName = remember { mutableStateOf(item.name) }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -118,9 +124,10 @@ fun ShoppingListItems(
                             .padding(4.dp, 8.dp)
                             .fillMaxWidth()
                             .weight(1f),
-                        value = item.name,
-                        onValueChange = { newName ->
-                            val itemCopy = item.copy(name = newName)
+                        value = editedName.value,
+                        onValueChange = {
+                            editedName.value = it
+                            val itemCopy = item.copy(name = it)
                             viewModel.updatetItem(itemCopy)
                         },
                         singleLine = true,
@@ -132,10 +139,10 @@ fun ShoppingListItems(
                         modifier = Modifier
                             .padding(4.dp, 8.dp)
                             .requiredWidth(20.dp),
-                        value = item.quantity.toString(),
-                        onValueChange = { updatedQuantity ->
-                            val quantity = updatedQuantity.toIntOrNull() ?: 0
-                            val itemCopy = item.copy(quantity = quantity)
+                        value = editedQuantity.value,
+                        onValueChange = {
+                            editedQuantity.value = it
+                            val itemCopy = item.copy(quantity = it.toIntOrNull() ?: 0)
                             viewModel.updatetItem(itemCopy)
                         },
                         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
@@ -153,10 +160,10 @@ fun ShoppingListItems(
                         modifier = Modifier
                             .padding(4.dp, 8.dp)
                             .requiredWidth(36.dp),
-                        value = item.price.toString(),
-                        onValueChange = { newPriceStr ->
-                            val newPrice = newPriceStr.toDoubleOrNull() ?: 0.0
-                            val itemCopy = item.copy(price = newPrice)
+                        value = editedPrice.value,
+                        onValueChange = {
+                            editedPrice.value = it
+                            val itemCopy = item.copy(price = it.toDoubleOrNull() ?: 0.0)
                             viewModel.updatetItem(itemCopy)
                         },
                         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
