@@ -1,1 +1,1 @@
-# Projects done in scope of cource SMB (PJATK)
+# Projects done in scope of SMB (PJATK)
