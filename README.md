@@ -1,1 +1,1 @@
-# shopping_list_pjatk
+# Projects done in scope of SMB (PJATK)
