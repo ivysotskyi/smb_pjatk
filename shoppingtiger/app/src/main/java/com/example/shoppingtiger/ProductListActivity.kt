@@ -68,7 +68,6 @@ class ProductListActivity : ComponentActivity() {
 fun ShoppingListItems(
     viewModel: ShoppingListViewModel
 ) {
-
     val listItems by viewModel.items.collectAsState(emptyList())
     Column(
         modifier = Modifier
@@ -188,7 +187,7 @@ fun ShoppingListItems(
                         .fillMaxWidth()
                         .background(color = Color.White)
                         .clickable {
-                            viewModel.insertItem(Item(name = "< new item >", quantity = 1))
+                            viewModel.insertItem(Item(name = "< new item >", quantity = 1), context = context)
                         }
                         .padding(8.dp),
                     horizontalArrangement = Arrangement.Center

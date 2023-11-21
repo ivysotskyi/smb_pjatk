@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 data class Item (
     @ColumnInfo(name = "item_id")
     @PrimaryKey(autoGenerate = true)
-    val id : Int = 0,
+    val id : Long = 0,
     val name : String,
     val price : Double = 0.0,
     val quantity : Int = 0,

@@ -1,7 +1,10 @@
 package com.example.shoppingtiger
 
 import android.app.Application
+import android.content.Context
+import android.content.Intent
 import android.util.Log
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shoppingtiger.database.room.Item
@@ -32,9 +35,14 @@ class ShoppingListViewModel(private val app: Application) : AndroidViewModel(app
         items = itemRepo.allItems
         }
 
-    fun insertItem(item: Item){
+    fun insertItem(item: Item, context: Context? = null){
         viewModelScope.launch {
-            itemRepo.insert(item)
+            val insertedItemID = itemRepo.insert(item)
+            context?.let {
+                val intent = Intent("com.example.SHOPPING_ITEM_ADDED")
+                intent.putExtra("ITEM_ID", insertedItemID)
+                it.sendBroadcast(intent)
+            }
         }
     }
     fun updatetItem(item: Item){
@@ -47,7 +55,7 @@ class ShoppingListViewModel(private val app: Application) : AndroidViewModel(app
             itemRepo.delete(item)
         }
     }
-    fun deleteItem(id: Int){
+    fun deleteItem(id: Long){
         viewModelScope.launch {
             itemRepo.delete(id)
         }

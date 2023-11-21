@@ -14,8 +14,9 @@ interface ItemDAO {
 
     @Query("SELECT * FROM items WHERE item_id=:id")
     fun getItem(id:Int): Flow<Item>
+
     @Insert
-    suspend fun insertItem(item:Item)
+    suspend fun insertItem(item:Item) : Long
 
     @Update
     suspend fun updateItem(item:Item)
@@ -24,5 +25,5 @@ interface ItemDAO {
     suspend fun deleteItem(item:Item)
 
     @Query("DELETE FROM ITEMS WHERE item_id = :id")
-    suspend fun deleteItem(id:Int)
+    suspend fun deleteItem(id:Long)
 }
