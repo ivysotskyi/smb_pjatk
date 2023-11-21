@@ -19,9 +19,14 @@
             android:theme="@style/Theme.ShoppingTiger" />
         <activity
             android:name=".ProductListActivity"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/title_activity_product_list"
-            android:theme="@style/Theme.ShoppingTiger" />
+            android:theme="@style/Theme.ShoppingTiger">
+            <intent-filter>
+                <action android:name="com.example.SHOPPING_ITEM_ADDED" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -29,10 +34,8 @@
             android:theme="@style/Theme.ShoppingTiger">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
-
 </manifest>
