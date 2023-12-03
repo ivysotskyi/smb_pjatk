@@ -3,6 +3,7 @@ package com.example.shoppingnotifier
 import android.Manifest
 import android.app.PendingIntent
 import android.app.Service
+import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.IBinder
@@ -24,46 +25,47 @@ class NewProductService : Service() {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         val itemId = intent.getLongExtra("ITEM_ID", -11)
 
-        val mainActivityIntent = packageManager.getLaunchIntentForPackage("com.example.shoppingtiger").also{
-            it?.putExtra("ITEM_ID", itemId)
-            it?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
-
-        if(mainActivityIntent != null) {
-
-            startActivity(mainActivityIntent)
-
-            val pendingIntent =
-                PendingIntent.getActivity(
-                    application,
-                    119911,
-                    mainActivityIntent,
-                    PendingIntent.FLAG_IMMUTABLE
+        val mainActivityIntent = Intent("com.example.SHOPPING_ITEM_ADDED_NOTIF").also{
+            it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            it.apply {
+                component = ComponentName(
+                    "com.example.shoppingtiger",
+                    "com.example.shoppingtiger.ProductListActivity"
                 )
-
-            val notification = NotificationCompat.Builder(application, "newProductAdd")
-                .setSmallIcon(R.mipmap.ic_launcher_round)
-                .setContentTitle("A new product was added.")
-                .setContentText("Tap to edit it...")
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .build()
-
-            if (ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                Toast.makeText(this, "Missing notification permission.", Toast.LENGTH_SHORT).show()
             }
+        }
 
-            NotificationManagerCompat.from(application)
-                .notify(index++, notification)
+        mainActivityIntent.putExtra("ITEM_ID", itemId)
+
+        val pendingIntent =
+            PendingIntent.getActivity(
+                application,
+                119911,
+                mainActivityIntent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
+
+        val notification = NotificationCompat.Builder(application, "newProductAdd")
+            .setSmallIcon(R.mipmap.ic_launcher_round)
+            .setContentTitle("A new product was added.")
+            .setContentText("Tap to edit it...")
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+            .build()
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            Toast.makeText(this, "Missing notification permission.", Toast.LENGTH_SHORT).show()
         }
-        else
-        {
-            Toast.makeText(this, "Error: Could not find Tiger Shopping List!", Toast.LENGTH_SHORT).show()
-        }
+
+        //startActivity(mainActivityIntent)
+
+        NotificationManagerCompat.from(application)
+            .notify(index++, notification)
+
 
         return super.onStartCommand(intent, flags, startId)
     }

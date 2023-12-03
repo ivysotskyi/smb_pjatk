@@ -1,7 +1,10 @@
 package com.example.shoppingtiger
 
 import OptionsManager
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -28,12 +31,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
@@ -43,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shoppingtiger.database.room.Item
 import com.example.shoppingtiger.ui.theme.ShoppingTigerTheme
+import kotlinx.coroutines.job
 
 class ProductListActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +70,13 @@ class ProductListActivity : ComponentActivity() {
             }
         }
     }
+    override fun onStart() {
+        super.onStart()
+        if(intent.action == "com.example.SHOPPING_ITEM_ADDED_NOTIF"){
+            val itemId = intent.getLongExtra("ITEM_ID", -11)
+        }
+
+    }
 }
 
 @Composable
@@ -69,6 +84,11 @@ fun ShoppingListItems(
     viewModel: ShoppingListViewModel
 ) {
     val listItems by viewModel.items.collectAsState(emptyList())
+
+    // for requesting focust on some selected item (when came from notification)
+    val focusRequester = remember { FocusRequester() }
+    var itemCanBeFocused = false
+    val itemToFocus = 103L
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -118,11 +138,18 @@ fun ShoppingListItems(
                         )
 
                     //name
+                    var nameModifier = Modifier
+                        .padding(4.dp, 8.dp)
+                        .fillMaxWidth()
+                        .weight(1f)
+
+                    if (item.id == itemToFocus) {
+                        itemCanBeFocused = true
+                        nameModifier = nameModifier.focusRequester(focusRequester)
+                    }
+
                     BasicTextField(
-                        modifier = Modifier
-                            .padding(4.dp, 8.dp)
-                            .fillMaxWidth()
-                            .weight(1f),
+                        modifier = nameModifier,
                         value = editedName.value,
                         onValueChange = {
                             editedName.value = it
@@ -187,7 +214,10 @@ fun ShoppingListItems(
                         .fillMaxWidth()
                         .background(color = Color.White)
                         .clickable {
-                            viewModel.insertItem(Item(name = "< new item >", quantity = 1), context = context)
+                            viewModel.insertItem(
+                                Item(name = "< new item >", quantity = 1),
+                                context = context
+                            )
                         }
                         .padding(8.dp),
                     horizontalArrangement = Arrangement.Center
@@ -195,6 +225,11 @@ fun ShoppingListItems(
                     Text("+ Add New", fontSize = 20.sp, color = Color.Blue)
                 }
             }
+        }
+
+        SideEffect() {
+            if(itemCanBeFocused)
+                focusRequester.requestFocus()
         }
     }
 }
