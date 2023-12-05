@@ -4,14 +4,11 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity (tableName = "items")
 data class Item (
-    @ColumnInfo(name = "item_id")
-    @PrimaryKey(autoGenerate = true)
-    val id : Long = 0,
+    var id : String = "",
     val name : String,
     val price : Double = 0.0,
-    val quantity : Int = 0,
-    val purchased : Boolean = false,
+    val quantity : Long = 0,
+    val purchased : Boolean = false
 ) {
 }

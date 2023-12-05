@@ -8,32 +8,31 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.shoppingtiger.database.room.Item
-import com.example.shoppingtiger.database.room.ShoppingDatabase
+//import com.example.shoppingtiger.database.room.ShoppingDatabase
 import com.example.shoppingtiger.ui.theme.ItemsRepository
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class ShoppingListViewModel(private val app: Application) : AndroidViewModel(app) {
 
     private val itemRepo: ItemsRepository
-    val items: Flow<List<Item>>
+    private val firebaseDatabase: FirebaseDatabase
+    //val items: Flow<List<Item>>
+    val items: StateFlow<HashMap<String, Item>>
 
     init{
-        val itemDao = ShoppingDatabase.instance(app).itemDao()
-        itemRepo = ItemsRepository(itemDao)
+        //val itemDao = ShoppingDatabase.instance(app).itemDao()
+
+        firebaseDatabase = FirebaseDatabase.getInstance("https://shoppinglist-8e9e2-default-rtdb.europe-west1.firebasedatabase.app")
+        itemRepo = ItemsRepository(firebaseDatabase)
+        items = itemRepo.allItems
+
         //insertItem(Item(name = "Beer", quantity = 2, price = 5.5, purchased = false))
         //insertItem(Item(name = "Chocolate", quantity = 3, price = 3.0, purchased = true))
-        viewModelScope.launch {
-            itemRepo.allItems.collect { itemList ->
-                for (item in itemList) {
-                    // Perform operations on 'item'
-                    Log.i("", "Item ID: ${item.id}, Name: ${item.name}")
-                }
-                //insertItem(Item(name = "Pineaple"))
-            }
-        }
-        items = itemRepo.allItems
-        }
+
+    }
 
     fun insertItem(item: Item, context: Context? = null){
         viewModelScope.launch {
@@ -55,7 +54,7 @@ class ShoppingListViewModel(private val app: Application) : AndroidViewModel(app
             itemRepo.delete(item)
         }
     }
-    fun deleteItem(id: Long){
+    fun deleteItem(id: String){
         viewModelScope.launch {
             itemRepo.delete(id)
         }

@@ -83,12 +83,9 @@ class ProductListActivity : ComponentActivity() {
 fun ShoppingListItems(
     viewModel: ShoppingListViewModel
 ) {
-    val listItems by viewModel.items.collectAsState(emptyList())
+    val listItems by viewModel.items.collectAsState(emptyMap())
 
     // for requesting focust on some selected item (when came from notification)
-    val focusRequester = remember { FocusRequester() }
-    var itemCanBeFocused = false
-    val itemToFocus = 103L
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -116,11 +113,11 @@ fun ShoppingListItems(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Top
         ) {
-            items(listItems) { item ->
+            items(listItems.toList()) { item ->
 
-                val editedQuantity = remember { mutableStateOf(item.quantity.toString()) }
-                val editedPrice = remember { mutableStateOf(item.price.toString()) }
-                val editedName = remember { mutableStateOf(item.name) }
+                val editedQuantity = remember { mutableStateOf(item.second.quantity.toString()) }
+                val editedPrice = remember { mutableStateOf(item.second.price.toString()) }
+                val editedName = remember { mutableStateOf(item.second.name) }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -130,9 +127,9 @@ fun ShoppingListItems(
                     // Checkbox on the right
                     if (OptionsManager.getShowCheckbox())
                         Checkbox(
-                            checked = item.purchased,
+                            checked = item.second.purchased,
                             onCheckedChange = { checked ->
-                                val itemCopy = item.copy(purchased = checked)
+                                val itemCopy = item.second.copy(purchased = checked)
                                 viewModel.updatetItem(itemCopy)
                             }
                         )
@@ -143,17 +140,12 @@ fun ShoppingListItems(
                         .fillMaxWidth()
                         .weight(1f)
 
-                    if (item.id == itemToFocus) {
-                        itemCanBeFocused = true
-                        nameModifier = nameModifier.focusRequester(focusRequester)
-                    }
-
                     BasicTextField(
                         modifier = nameModifier,
                         value = editedName.value,
                         onValueChange = {
                             editedName.value = it
-                            val itemCopy = item.copy(name = it)
+                            val itemCopy = item.second.copy(name = it)
                             viewModel.updatetItem(itemCopy)
                         },
                         singleLine = true,
@@ -168,7 +160,7 @@ fun ShoppingListItems(
                         value = editedQuantity.value,
                         onValueChange = {
                             editedQuantity.value = it
-                            val itemCopy = item.copy(quantity = it.toIntOrNull() ?: 0)
+                            val itemCopy = item.second.copy(quantity = it.toLongOrNull() ?: 0)
                             viewModel.updatetItem(itemCopy)
                         },
                         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
@@ -189,7 +181,7 @@ fun ShoppingListItems(
                         value = editedPrice.value,
                         onValueChange = {
                             editedPrice.value = it
-                            val itemCopy = item.copy(price = it.toDoubleOrNull() ?: 0.0)
+                            val itemCopy = item.second.copy(price = it.toDoubleOrNull() ?: 0.0)
                             viewModel.updatetItem(itemCopy)
                         },
                         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
@@ -200,7 +192,7 @@ fun ShoppingListItems(
                     //remove button
                     IconButton(
                         onClick = {
-                            viewModel.deleteItem(item.id)
+                            viewModel.deleteItem(item.second.id)
                         }
                     ) {
                         Icon(imageVector = Icons.Default.Delete, contentDescription = "Remove")
@@ -225,11 +217,6 @@ fun ShoppingListItems(
                     Text("+ Add New", fontSize = 20.sp, color = Color.Blue)
                 }
             }
-        }
-
-        SideEffect() {
-            if(itemCanBeFocused)
-                focusRequester.requestFocus()
         }
     }
 }
