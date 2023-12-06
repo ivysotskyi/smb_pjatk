@@ -14,6 +14,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ShoppingTiger"
         tools:targetApi="31">
+        <activity
+            android:name=".LoginActivity"
+            android:exported="true"
+            android:label="@string/title_activity_login"
+            android:theme="@style/Theme.ShoppingTiger">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <receiver
             android:name=".OpenProductReceiver"
@@ -32,10 +43,11 @@
             android:name=".ProductListActivity"
             android:exported="true"
             android:label="@string/title_activity_product_list"
-            android:theme="@style/Theme.ShoppingTiger"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.ShoppingTiger">
             <intent-filter>
                 <action android:name="com.example.SHOPPING_ITEM_ADDED" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -46,8 +58,10 @@
             android:theme="@style/Theme.ShoppingTiger">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

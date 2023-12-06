@@ -21,13 +21,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.shoppingtiger.ui.theme.ShoppingTigerTheme
-import com.google.firebase.FirebaseApp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        OptionsManager.initialize(applicationContext)
-        FirebaseApp.initializeApp(application)
         setContent {
             ShoppingTigerTheme {
                 // A surface container using the 'background' color from the theme
