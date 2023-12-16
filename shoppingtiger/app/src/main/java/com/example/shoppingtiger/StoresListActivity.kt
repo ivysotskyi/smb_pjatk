@@ -48,8 +48,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.shoppingtiger.MainActivity
 import com.example.shoppingtiger.ui.theme.ShoppingTigerTheme
+import com.example.shoppingtiger.database.room.StoreItem
 
 
 class StoresListActivity : ComponentActivity() {
@@ -99,6 +99,28 @@ fun StoresListItems(
                 color = Color.Blue,
                 style = TextStyle(fontWeight = FontWeight.Bold)
             )
+        }
+
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Top
+        ) {
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(color = Color.White)
+                        .clickable {
+                            viewModel.insertItem(
+                                StoreItem(name = "< new store >")
+                            )
+                        }
+                        .padding(8.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text("+ Add New", fontSize = 20.sp, color = Color.Blue)
+                }
+            }
         }
     }
 }

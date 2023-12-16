@@ -8,9 +8,9 @@ import androidx.room.PrimaryKey
 data class StoreItem (
     @ColumnInfo(name = "id")
     @PrimaryKey(autoGenerate = true)
-    var id : Long,
-    val name : String,
-    val description : String,
-    val place : Long = 0,
+    var id : Long = 0,
+    val name : String = "",
+    val description : String = "",
+    val location : String = "",
     val radius : Double = 0.0
 )
