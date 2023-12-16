@@ -13,7 +13,7 @@ interface StoreItemDAO {
     @Query("SELECT * FROM storeitems")
     fun getStoreItems(): Flow<List<StoreItem>>
 
-    @Query("SELECT * FROM storeitems WHERE item_id=:id")
+    @Query("SELECT * FROM storeitems WHERE id=:id")
     fun getItem(id:Long): Flow<StoreItem>
 
     @Insert

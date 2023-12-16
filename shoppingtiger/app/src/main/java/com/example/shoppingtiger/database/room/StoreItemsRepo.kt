@@ -1,9 +1,4 @@
-package com.example.shoppingtiger.ui.theme
-
-import com.example.shoppingtiger.database.room.Item
-import com.example.shoppingtiger.database.room.ItemDAO
-import com.example.shoppingtiger.database.room.StoreItem
-import com.example.shoppingtiger.database.room.StoreItemDAO
+package com.example.shoppingtiger.database.room
 
 class StoreItemsRepo(private val storeItemDao: StoreItemDAO) {
 
