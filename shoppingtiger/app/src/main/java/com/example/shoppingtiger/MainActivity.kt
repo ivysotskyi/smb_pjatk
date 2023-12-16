@@ -62,6 +62,23 @@ class MainActivity : ComponentActivity() {
                                 .requiredHeight(120.dp)
                                 .fillMaxWidth(),
                             onClick = {
+                                context.startActivity(Intent(context, StoresListActivity::class.java))
+                            }
+                        )
+                        {
+                            Text(
+                                text = "My Stores",
+                                fontSize = 32.sp
+                            )
+                        }
+                        Spacer(
+                            modifier = Modifier.requiredHeight(20.dp)
+                        )
+                        Button(
+                            modifier = Modifier
+                                .requiredHeight(120.dp)
+                                .fillMaxWidth(),
+                            onClick = {
                                 context.startActivity(Intent(context, OptionsActivity::class.java))
                             }
                         )

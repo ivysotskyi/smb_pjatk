@@ -52,6 +52,11 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".StoresListActivity"
+            android:exported="false"
+            android:label="@string/title_activity_stores_list"
+            android:theme="@style/Theme.ShoppingTiger" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
