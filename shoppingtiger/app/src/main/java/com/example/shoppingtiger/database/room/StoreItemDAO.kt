@@ -14,7 +14,7 @@ interface StoreItemDAO {
     fun getStoreItems(): Flow<List<StoreItem>>
 
     @Query("SELECT * FROM storeitems WHERE item_id=:id")
-    fun getItem(id:Int): Flow<StoreItem>
+    fun getItem(id:Long): Flow<StoreItem>
 
     @Insert
     suspend fun insertItem(item:StoreItem) : Long
