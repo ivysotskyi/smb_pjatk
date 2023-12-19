@@ -48,6 +48,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.mapboxapp.EditStoreActivity
 import com.example.shoppingtiger.ui.theme.ShoppingTigerTheme
 import com.example.shoppingtiger.database.room.StoreItem
 
@@ -111,9 +112,12 @@ fun StoresListItems(
                         .fillMaxWidth()
                         .background(color = Color.White)
                         .clickable {
-                            viewModel.insertItem(
+                            val storeId:Long = viewModel.insertItem(
                                 StoreItem(name = "< new store >")
                             )
+                            val intent = Intent(context, EditStoreActivity::class.java)
+                            intent.putExtra("store_id", storeId)
+                            context.startActivity(intent)
                         }
                         .padding(8.dp),
                     horizontalArrangement = Arrangement.Center

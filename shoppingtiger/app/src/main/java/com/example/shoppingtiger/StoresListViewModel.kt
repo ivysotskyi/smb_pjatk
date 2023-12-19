@@ -35,10 +35,12 @@ class StoresListViewModel(private val app: Application) : AndroidViewModel(app) 
         items = storeItemsRepo.allItems
     }
 
-    fun insertItem(item: StoreItem){
+    fun insertItem(item: StoreItem):Long{
+        var result: Long = -11 // Default value or an appropriate default for your use case
         viewModelScope.launch {
-            storeItemsRepo.insert(item)
+            result = storeItemsRepo.insert(item)
         }
+        return result
     }
     fun updatetItem(item: StoreItem){
         viewModelScope.launch {

@@ -61,7 +61,9 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth:22.3.0")
 
+    implementation("com.mapbox.mapboxsdk:mapbox-android-core:5.0.2")
     implementation("com.mapbox.extension:maps-compose:11.0.0")
+    implementation("com.mapbox.maps:android:10.9.1")
     implementation("dev.shreyaspatil.permission-flow:permission-flow-compose:1.2.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.0")
     implementation("com.google.android.gms:play-services-location:21.0.1")
