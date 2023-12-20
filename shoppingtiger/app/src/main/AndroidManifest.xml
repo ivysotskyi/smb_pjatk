@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -18,7 +20,7 @@
             android:name=".EditStoreActivity"
             android:exported="false"
             android:label="@string/title_activity_edit_store"
-            android:theme="@style/Theme.ShoppingTiger" />
+            android:theme="@style/Theme.AppCompat" />
         <activity
             android:name=".LoginActivity"
             android:exported="true"
