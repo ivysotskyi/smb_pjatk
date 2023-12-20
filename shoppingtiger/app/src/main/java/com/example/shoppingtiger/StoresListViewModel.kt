@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import com.example.shoppingtiger.database.room.ShoppingDatabase
 import com.example.shoppingtiger.database.room.StoreItem
 import com.example.shoppingtiger.database.room.StoreItemsRepo
+import kotlinx.coroutines.async
 
 class StoresListViewModel(private val app: Application) : AndroidViewModel(app)  {
     private val storeItemsRepo: StoreItemsRepo
@@ -23,22 +24,14 @@ class StoresListViewModel(private val app: Application) : AndroidViewModel(app) 
 
     init{
         val storeItemDao = ShoppingDatabase.instance(app).storeItemDao()
-        storeItemsRepo = StoreItemsRepo(storeItemDao)
-        viewModelScope.launch {
-            storeItemsRepo.allItems.collect { itemList ->
-                for (item in itemList) {
-                    // Perform operations on 'item'
-                    Log.i("", "Item ID: ${item.id}, Name: ${item.name}")
-                }
-            }
-        }
+        storeItemsRepo = StoreItemsRepo.instance(storeItemDao = storeItemDao)!!
         items = storeItemsRepo.allItems
     }
 
     fun insertItem(item: StoreItem):Long{
         var result: Long = -11 // Default value or an appropriate default for your use case
         viewModelScope.launch {
-            result = storeItemsRepo.insert(item)
+            result=storeItemsRepo.insert(item)
         }
         return result
     }
