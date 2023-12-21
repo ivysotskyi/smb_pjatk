@@ -123,11 +123,12 @@ fun Greeting(auth: FirebaseAuth, modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.requiredHeight(10.dp))
         Button(
             onClick = {
+                context.startActivity(Intent(context, MainActivity::class.java))
                 auth.signInWithEmailAndPassword(
                     inputTextLogin,
                     inputTextPassword
                 ).addOnCompleteListener{
-                    if(it.isSuccessful){
+                    if(false && it.isSuccessful){
                         context.startActivity(Intent(context, MainActivity::class.java))
                     }else{
                         Toast.makeText(
