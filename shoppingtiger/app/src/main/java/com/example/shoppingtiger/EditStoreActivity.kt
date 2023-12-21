@@ -52,21 +52,15 @@ import kotlin.coroutines.coroutineContext
 
 class EditStoreActivity : AppCompatActivity() {
 
-    private lateinit var mapView: MapView
-    private lateinit var mapboxMap: MapboxMap
-    private lateinit var symbolManager: SymbolManager
-    private var selectedSymbol: Symbol? = null
     private lateinit var permissionsManager: PermissionsManager
     var storeId: Long = -11
-
-    private fun getCurrentStore() = GlobalScope.async {
-        StoreItemsRepo.instance()!!.getItem(storeId)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         storeId = intent.getLongExtra("STORE_ID", -11)
+        val long = intent.getDoubleExtra("STORE_LONG", 0.0)
+        val lat = intent.getDoubleExtra("STORE_LAT", 0.0)
 
         val viewModel = EditStoreViewModel(application)
         var permissionsListener: PermissionsListener = object : PermissionsListener {
@@ -82,7 +76,7 @@ class EditStoreActivity : AppCompatActivity() {
             permissionsManager.requestLocationPermissions(this)
         }
         setContent {
-            MapScreen(viewModel = viewModel, storeId=storeId)
+            MapScreen(viewModel = viewModel, storeId=storeId, Point.fromLngLat(long, lat))
         }
 
 
@@ -90,28 +84,17 @@ class EditStoreActivity : AppCompatActivity() {
 }
 
 @Composable
-fun MapScreen(viewModel: EditStoreViewModel, storeId: Long) {
+fun MapScreen(viewModel: EditStoreViewModel, storeId: Long, pnt : Point) {
     val storeItem = viewModel.getItemById(storeId).collectAsState(initial = null)
 
-    var point: Point = remember(storeItem) {
-        storeItem.value?.let {
-            Point.fromLngLat(it.long, it.lat)
-        } ?: Point.fromLngLat(0.0, 0.0) // Provide a default value or handle the null case
-    }
-
-    LaunchedEffect(storeItem) {
-        storeItem.value?.let {
-            // Update the point whenever storeItem changes
-            point = Point.fromLngLat(it.long, it.lat)
-        }
-    }
+    var point: Point? by remember { mutableStateOf(pnt) }
 
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
         MapBoxMap(
             onPointChange = {
-                //point = it
+                point = it
                 viewModel.updatetItem(storeItem.value!!.copy(long = it.longitude(), lat = it.latitude()))
             },
             point = point,

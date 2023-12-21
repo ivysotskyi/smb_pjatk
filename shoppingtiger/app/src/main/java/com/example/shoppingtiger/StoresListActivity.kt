@@ -1,7 +1,12 @@
 package com.example.shoppingtiger
 
 
+import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -45,8 +50,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityCompat.requestPermissions
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import com.example.shoppingtiger.ui.theme.ShoppingTigerTheme
 import com.example.shoppingtiger.database.room.StoreItem
+import com.mapbox.geojson.Point
 
 
 class StoresListActivity : ComponentActivity() {
@@ -55,12 +65,33 @@ class StoresListActivity : ComponentActivity() {
         setContent {
             ShoppingTigerTheme {
                 val viewModel = StoresListViewModel(application)
+                if (ActivityCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    ActivityCompat.requestPermissions(
+                        this,
+                        arrayOf(
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                        ), 1
+                    )
+                }
+                val locationManager: LocationManager =
+                    getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                val currLocation =
+                    locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     StoresListItems(
-                        viewModel = viewModel
+                        viewModel = viewModel,
+                        currLocation = currLocation
                     )
                 }
             }
@@ -70,7 +101,8 @@ class StoresListActivity : ComponentActivity() {
 
 @Composable
 fun StoresListItems(
-    viewModel: StoresListViewModel
+    viewModel: StoresListViewModel,
+    currLocation: Location?
 ) {
     val listItems by viewModel.items.collectAsState(emptyList())
 
@@ -130,25 +162,20 @@ fun StoresListItems(
                         textStyle = TextStyle(fontSize = 20.sp)
                     )
 
-                    //to favourite activity
-                    IconButton(
-                        onClick = {
-                            viewModel.updatetItem(item.copy(favourite = !item.favourite))
-                        }
-                    ) {
-                        val icon = if (item.favourite) Icons.Default.Favorite else Icons.Default.FavoriteBorder
-                        Icon(imageVector = icon, contentDescription = "set location")
-                    }
-
                     //edit location
                     IconButton(
                         onClick = {
                             val intent = Intent(context, EditStoreActivity::class.java)
                             intent.putExtra("STORE_ID", item.id)
+                            intent.putExtra("STORE_LONG", item.long)
+                            intent.putExtra("STORE_LAT", item.lat)
                             context.startActivity(intent)
                         }
                     ) {
-                        Icon(imageVector = Icons.Default.LocationOn, contentDescription = "set location")
+                        Icon(
+                            imageVector = Icons.Default.LocationOn,
+                            contentDescription = "set location"
+                        )
                     }
 
                     //remove button
@@ -168,8 +195,13 @@ fun StoresListItems(
                         .fillMaxWidth()
                         .background(color = Color.White)
                         .clickable {
-                            val storeId:Long = viewModel.insertItem(
-                                StoreItem(name = "< new store >", description = "no description")
+                            val storeId: Long = viewModel.insertItem(
+                                StoreItem(
+                                    name = "< new store >",
+                                    description = "no description",
+                                    long = currLocation?.longitude ?: 21.017532,
+                                    lat = currLocation?.latitude ?: 52.237049
+                                )
                             )
                         }
                         .padding(8.dp),

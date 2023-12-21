@@ -13,6 +13,5 @@ data class StoreItem (
     val description : String = "",
     val lat : Double = 0.0,
     val long : Double = 0.0,
-    val radius : Double = 0.0,
-    val favourite : Boolean = false
+    val radius : Double = 0.0
 )
