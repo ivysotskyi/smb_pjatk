@@ -137,16 +137,18 @@ fun StoresListItems(
             items(listItems.toList()) { item ->
 
                 val editedName = remember { mutableStateOf(item.name) }
+                val editedDescr = remember { mutableStateOf(item.description) }
+                val editedRadius = remember { mutableStateOf(item.radius.toString()) }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(4.dp)
+                        .padding(4.dp, 0.dp)
                         .background(Color.White)
                 ) {
 
                     //name
                     var nameModifier = Modifier
-                        .padding(4.dp, 8.dp)
+                        .padding(4.dp, 8.dp, 4.dp, 0.dp)
                         .fillMaxWidth()
                         .weight(1f)
 
@@ -186,6 +188,63 @@ fun StoresListItems(
                     ) {
                         Icon(imageVector = Icons.Default.Delete, contentDescription = "Remove")
                     }
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(4.dp, 0.dp)
+                        .background(Color.White)
+                ) {
+
+                    //description
+                    var descrModifier = Modifier
+                        .padding(4.dp, 0.dp)
+                        .fillMaxWidth()
+                        .weight(1f)
+
+                    BasicTextField(
+                        modifier = descrModifier,
+                        value = editedDescr.value,
+                        onValueChange = {
+                            editedDescr.value = it
+                            val itemCopy = item.copy(description = it)
+                            viewModel.updatetItem(itemCopy)
+                        },
+                        singleLine = false,
+                        textStyle = TextStyle(fontSize = 12.sp)
+                    )
+                }
+
+
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(4.dp, 0.dp)
+                        .background(Color.White)
+                ) {
+
+
+                    Text(
+                        modifier = Modifier.padding(4.dp, 0.dp),
+                        text = "Radius: ",
+                        fontSize = 10.sp
+                    )
+                    BasicTextField(
+                        modifier = Modifier
+                            .padding(4.dp, 0.dp, 4.dp, 4.dp)
+                            .requiredWidth(24.dp),
+                        value = editedRadius.value,
+                        onValueChange = {
+                            editedRadius.value = it
+                            val itemCopy = item.copy(radius = it.toDoubleOrNull() ?: 0.0)
+                            viewModel.updatetItem(itemCopy)
+                        },
+                        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                        singleLine = true,
+                        textStyle = TextStyle(fontSize = 10.sp)
+                    )
                 }
                 Divider()
             }
