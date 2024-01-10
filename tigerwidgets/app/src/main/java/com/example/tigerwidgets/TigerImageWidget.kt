@@ -20,7 +20,7 @@ class TigerImageWidget : AppWidgetProvider() {
 
         private var mediaPlayer: MediaPlayer? = null
         private var currentSoundIndex = 0
-        private val soundResources = intArrayOf(R.raw.dog, R.raw.rocket)
+        private val soundResources = arrayOf(R.raw.dog, R.raw.sms_tone, R.raw.rocket, R.raw.tatarata, R.raw.szczedryk)
         private var isPlaying = false
 
         private val images = arrayOf(R.drawable.resource_do, R.drawable.dont);
@@ -75,7 +75,10 @@ class TigerImageWidget : AppWidgetProvider() {
         views.setOnClickPendingIntent(R.id.imageView, makePendingIntent(context, "CHANGE_IMAGE"))
 
         // MUSIC
-        views.setTextViewText(R.id.playStatus, (if(isPlaying) "Playing: " else "") + "Track $currentSoundIndex")
+        views.setTextViewText(
+            R.id.playStatus,
+            (if (isPlaying) "Playing: " else "") + "Track $currentSoundIndex"
+        )
         views.setOnClickPendingIntent(R.id.btnPlay, makePendingIntent(context, "PLAY"))
         views.setOnClickPendingIntent(R.id.btnStop, makePendingIntent(context, "STOP"))
         views.setOnClickPendingIntent(R.id.btnNext, makePendingIntent(context, "NEXT"))
@@ -83,8 +86,7 @@ class TigerImageWidget : AppWidgetProvider() {
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 
-    private fun triggerUpdate(context: Context)
-    {
+    private fun triggerUpdate(context: Context) {
         val appWidgetManager = AppWidgetManager.getInstance(context)
         val appWidgetIds =
             appWidgetManager.getAppWidgetIds(
@@ -97,15 +99,13 @@ class TigerImageWidget : AppWidgetProvider() {
     }
 
     private fun play(context: Context) {
-
-        if (mediaPlayer == null) {
-            mediaPlayer = MediaPlayer.create(context, soundResources[currentSoundIndex])
-            mediaPlayer?.setOnCompletionListener {
-                if(currentSoundIndex == soundResources.size - 1)
-                    isPlaying = false
-                next(context)
-                triggerUpdate(context)
-            }
+        mediaPlayer?.reset()
+        mediaPlayer = MediaPlayer.create(context, soundResources[currentSoundIndex])
+        mediaPlayer?.setOnCompletionListener {
+            if (currentSoundIndex == soundResources.size - 1)
+                isPlaying = false
+            next(context)
+            triggerUpdate(context)
         }
         isPlaying = true
         mediaPlayer?.start()
