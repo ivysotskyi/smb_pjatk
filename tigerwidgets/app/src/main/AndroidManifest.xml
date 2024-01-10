@@ -19,6 +19,9 @@
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="PLAY" />
+                <action android:name="STOP" />
+                <action android:name="NEXT" />
             </intent-filter>
 
             <meta-data
@@ -26,5 +29,4 @@
                 android:resource="@xml/tiger_image_widget_info" />
         </receiver>
     </application>
-
 </manifest>
