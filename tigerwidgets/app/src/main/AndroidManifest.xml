@@ -19,6 +19,7 @@
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="CHANGE_IMAGE" />
                 <action android:name="PLAY" />
                 <action android:name="STOP" />
                 <action android:name="NEXT" />

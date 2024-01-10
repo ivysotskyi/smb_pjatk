@@ -46,7 +46,7 @@ class TigerImageWidget : AppWidgetProvider() {
         // Enter relevant functionality for when the last widget is disabled
     }
 
-    private fun makePendingMusicIntent(context: Context, action: String): PendingIntent {
+    private fun makePendingIntent(context: Context, action: String): PendingIntent {
         val intent = Intent(context, TigerImageWidget::class.java)
         intent.action = action
         return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
@@ -70,24 +70,15 @@ class TigerImageWidget : AppWidgetProvider() {
 
         views.setOnClickPendingIntent(R.id.button2, pendingIntent)
 
+        // IMAGE
         views.setImageViewResource(R.id.imageView, images[currentIndex]);
-
-        // Set the click listener
-        val changeImageIntent = Intent(context, TigerImageWidget::class.java)
-        changeImageIntent.action = "CHANGE_IMAGE"
-        val changeImagePendingIntent = PendingIntent.getActivity(
-            context,
-            1,
-            changeImageIntent,
-            PendingIntent.FLAG_IMMUTABLE
-        )
-        views.setOnClickPendingIntent(R.id.imageView, changeImagePendingIntent)
+        views.setOnClickPendingIntent(R.id.imageView, makePendingIntent(context, "CHANGE_IMAGE"))
 
         // MUSIC
         views.setTextViewText(R.id.playStatus, (if(isPlaying) "Playing: " else "") + "Track $currentSoundIndex")
-        views.setOnClickPendingIntent(R.id.btnPlay, makePendingMusicIntent(context, "PLAY"))
-        views.setOnClickPendingIntent(R.id.btnStop, makePendingMusicIntent(context, "STOP"))
-        views.setOnClickPendingIntent(R.id.btnNext, makePendingMusicIntent(context, "NEXT"))
+        views.setOnClickPendingIntent(R.id.btnPlay, makePendingIntent(context, "PLAY"))
+        views.setOnClickPendingIntent(R.id.btnStop, makePendingIntent(context, "STOP"))
+        views.setOnClickPendingIntent(R.id.btnNext, makePendingIntent(context, "NEXT"))
 
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
